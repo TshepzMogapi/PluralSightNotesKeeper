@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.List;
+
 public class NoteListActivity extends AppCompatActivity {
 
 //    private ArrayAdapter<NoteInfo> mAdapterNotes;
@@ -68,6 +70,11 @@ public class NoteListActivity extends AppCompatActivity {
 
         recyclerNotes.setLayoutManager(notesLayoutManager);
 
+        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+
+        final NoteRecyclerAdapdter noteRecyclerAdapdter = new NoteRecyclerAdapdter(this, notes);
+
+        recyclerNotes.setAdapter(noteRecyclerAdapdter);
 
     }
 
