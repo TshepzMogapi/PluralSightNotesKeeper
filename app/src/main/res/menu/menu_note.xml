@@ -4,8 +4,10 @@
     tools:context="com.example.android.pluralsightnoteskeeper.NoteActivity">
     <item
         android:id="@+id/action_cancel"
+        android:icon="@android:drawable/ic_menu_revert"
         android:orderInCategory="103"
-        android:title="Cancel" />
+        android:title="Cancel"
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_Send_email"
         android:orderInCategory="102"
@@ -13,6 +15,8 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_next"
+        android:icon="@android:drawable/ic_media_next"
         android:orderInCategory="104"
-        android:title="Next" />
+        android:title="Next"
+        app:showAsAction="ifRoom|withText" />
 </menu>
