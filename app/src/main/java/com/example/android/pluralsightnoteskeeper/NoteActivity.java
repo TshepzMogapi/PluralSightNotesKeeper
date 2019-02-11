@@ -146,11 +146,11 @@ public class NoteActivity extends AppCompatActivity {
         if (mIsNewNote) {
 
             createNewNote();
-        } else {
-
-            mNote = DataManager.getInstance().getNotes().get(position);
-
         }
+
+        mNote = DataManager.getInstance().getNotes().get(position);
+
+
 
     }
 
@@ -181,13 +181,26 @@ public class NoteActivity extends AppCompatActivity {
 
             sendEmail();
             return true;
-        }  else  {
+        }  else if (id == R.id.action_cancel) {
 
             mIsCancelling = true;
             finish();
+        } else if (id == R.id.action_next) {
+
+            moveNext();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+        saveNote();
+
+        ++mNotePosition;
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+
+        saveOriginalValues();
+        displayNote(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
     }
 
     private void sendEmail() {

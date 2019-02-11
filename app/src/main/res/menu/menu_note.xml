@@ -3,12 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.pluralsightnoteskeeper.NoteActivity">
     <item
+        android:id="@+id/action_cancel"
+        android:orderInCategory="103"
+        android:title="Cancel" />
+    <item
         android:id="@+id/action_Send_email"
-        android:orderInCategory="100"
+        android:orderInCategory="102"
         android:title="Send as email"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_cancel"
-        android:orderInCategory="101"
-        android:title="Cancel" />
+        android:id="@+id/action_next"
+        android:orderInCategory="104"
+        android:title="Next" />
 </menu>
