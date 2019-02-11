@@ -12,7 +12,8 @@ import android.view.View;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
-    private NoteRecyclerAdapter noteRecyclerAdapter;
+
+    private NoteRecyclerAdapter mNoteRecyclerAdapter;
 
 //    private ArrayAdapter<NoteInfo> mAdapterNotes;
 
@@ -37,34 +38,13 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-//        mAdapterNotes.notifyDataSetChanged();
-        noteRecyclerAdapter.notifyDataSetChanged();
+    protected void onResume() {
+        super.onResume();
+        mNoteRecyclerAdapter.notifyDataSetChanged();
     }
 
     private void initializeDisplayContent() {
 
-//        final ListView listNotes = (ListView) findViewById(R.id.list_notes);
-//
-//        List<NoteInfo> notes = DataManager.getInstance().getNotes();
-//
-//        mAdapterNotes = new ArrayAdapter<NoteInfo>(this, android.R.layout.simple_list_item_1, notes);
-//
-//        listNotes.setAdapter(mAdapterNotes);
-//
-//        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
-//
-////                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(i);
-//
-//                intent.putExtra(NoteActivity.NOTE_POSITION, i);
-//
-//                startActivity(intent);
-//            }
-//        });
 
         final RecyclerView recyclerNotes = (RecyclerView) findViewById(R.id.list_notes);
 
@@ -74,9 +54,9 @@ public class NoteListActivity extends AppCompatActivity {
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
-        noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
-        recyclerNotes.setAdapter(noteRecyclerAdapter);
+        recyclerNotes.setAdapter(mNoteRecyclerAdapter);
 
     }
 
