@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
-
+    private RecyclerView mRecyclerItems;
+    private LinearLayoutManager mNotesLayoutManager;
 
 
     @Override
@@ -36,8 +38,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, NoteActivity.class));
-//                Snackbar.make(view, "Link to create new note", Snackbar.LENGTH_LONG)
-//                        .setAction("Acton", null).show();
+
             }
         });
 
@@ -63,17 +64,28 @@ public class MainActivity extends AppCompatActivity
     private void initializeDisplayContent() {
 
 
-        final RecyclerView recyclerNotes = (RecyclerView) findViewById(R.id.list_items);
+        mRecyclerItems = (RecyclerView) findViewById(R.id.list_items);
 
-        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
+        mNotesLayoutManager = new LinearLayoutManager(this);
 
-        recyclerNotes.setLayoutManager(notesLayoutManager);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
-        recyclerNotes.setAdapter(mNoteRecyclerAdapter);
+        displayNotes();
+
+    }
+
+    private void displayNotes() {
+
+        mRecyclerItems.setLayoutManager(mNotesLayoutManager);
+
+        mRecyclerItems.setAdapter(mNoteRecyclerAdapter);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        menu.findItem(R.id.nav_notes).setChecked(true);
 
     }
 
@@ -115,22 +127,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        if (id == R.id.nav_notes) {
+           displayNotes();
+        } else if (id == R.id.nav_courses) {
+            handleSelection("Courses");
+        }else if (id == R.id.nav_share) {
+            handleSelection("Sharing is caring");
         } else if (id == R.id.nav_send) {
-
+            handleSelection("Sending cool stuff");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handleSelection(String message) {
+        View view = findViewById(R.id.list_items);
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 }
