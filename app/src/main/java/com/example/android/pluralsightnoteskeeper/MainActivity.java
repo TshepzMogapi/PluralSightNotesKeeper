@@ -9,6 +9,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerItems;
     private LinearLayoutManager mNotesLayoutManager;
+    private CourseRecyclerAdapter mCourseRecyclerAdapter;
+    private GridLayoutManager mCourseLayoutManager;
 
 
     @Override
@@ -68,10 +71,17 @@ public class MainActivity extends AppCompatActivity
 
         mNotesLayoutManager = new LinearLayoutManager(this);
 
+        mCourseLayoutManager = new GridLayoutManager(this, 2);
+
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+
+
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+
+        mCourseRecyclerAdapter = new CourseRecyclerAdapter(this, courses);
 
         displayNotes();
 
@@ -83,10 +93,21 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerItems.setAdapter(mNoteRecyclerAdapter);
 
+        selectNavigationMenuItem(R.id.nav_notes);
+
+    }
+
+    private void selectNavigationMenuItem(int id) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
-        menu.findItem(R.id.nav_notes).setChecked(true);
+        menu.findItem(id).setChecked(true);
+    }
 
+
+    private void displayCourses() {
+        mRecyclerItems.setLayoutManager(mCourseLayoutManager);
+        mRecyclerItems.setAdapter(mCourseRecyclerAdapter);
+        selectNavigationMenuItem(R.id.nav_courses);
     }
 
     @Override
@@ -130,7 +151,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_notes) {
            displayNotes();
         } else if (id == R.id.nav_courses) {
-            handleSelection("Courses");
+            displayCourses();
         }else if (id == R.id.nav_share) {
             handleSelection("Sharing is caring");
         } else if (id == R.id.nav_send) {
