@@ -2,7 +2,6 @@ package com.example.android.pluralsightnoteskeeper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDisplayContent() {
 
+        DataManager.loadFromDataBase(mDbOpenHelper);
 
         mRecyclerItems = (RecyclerView) findViewById(R.id.list_items);
 
@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity
         mRecyclerItems.setLayoutManager(mNotesLayoutManager);
 
         mRecyclerItems.setAdapter(mNoteRecyclerAdapter);
-
-        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
         selectNavigationMenuItem(R.id.nav_notes);
 
