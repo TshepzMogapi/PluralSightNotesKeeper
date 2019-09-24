@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.pluralsightnoteskeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
+import com.example.android.pluralsightnoteskeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 
 import java.util.List;
 
@@ -253,12 +254,26 @@ public class MainActivity extends AppCompatActivity
                 public Cursor loadInBackground() {
                     SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
                     final String[] noteColumns = {
-                            NoteInfoEntry._ID,
+                            NoteInfoEntry.getQName(NoteInfoEntry._ID),
                             NoteInfoEntry.COLUMN_NOTE_TITLE,
-                            NoteInfoEntry.COLUMN_COURSE_ID};
-                    final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
+                            CourseInfoEntry.COLUMN_COURSE_TITLE
+                    };
+
+
+                    final String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
-                    return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+
+
+
+//                  note_info JOIN course_info ON note_info.course_id == course_info.course_id
+
+                    String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
+                            CourseInfoEntry.TABLE_NAME + " ON " +
+                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID)+ " = " +
+                            CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
+
+
+                    return db.query(tablesWithJoin, noteColumns,
                             null, null, null, null, noteOrderBy);
                 }
             };
