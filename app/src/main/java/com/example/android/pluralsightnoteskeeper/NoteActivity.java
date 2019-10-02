@@ -7,19 +7,23 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import java.util.List;
-
+import com.example.android.pluralsightnoteskeeper.NoteKeeperProviderContract.Notes;
 import static com.example.android.pluralsightnoteskeeper.NoteKeeperDatabaseContract.*;
 
 public class NoteActivity extends AppCompatActivity
@@ -51,6 +55,11 @@ public class NoteActivity extends AppCompatActivity
     private SimpleCursorAdapter mAdapterCourses;
     private boolean mCoursesQueryFinished;
     private boolean mNotesQueryFinished;
+    private Uri mNoteUri;
+
+    private final String TAG = getClass().getSimpleName();
+
+
 
     @Override
     protected void onDestroy() {
@@ -314,21 +323,41 @@ public class NoteActivity extends AppCompatActivity
 
     private void createNewNote() {
 
+        AsyncTask<ContentValues, Void, Uri> task =
+                new AsyncTask<ContentValues, Void, Uri>() {
+            @Override
+            protected Uri doInBackground(ContentValues... params) {
+                ContentValues insertValues = params[0];
+                Uri rowUri = getContentResolver()
+                        .insert(Notes.CONTENT_URI, insertValues);
+
+                return rowUri;
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                Log.d(TAG, "onPostExecute - thread: " + Thread.currentThread().getId());
+
+                mNoteUri = uri;
+
+                displaySnackbar(mNoteUri.toString());
+            }
+        };
+
         ContentValues values = new ContentValues();
+        values.put(Notes.COLUMN_COURSE_ID, "");
+        values.put(Notes.COLUMN_NOTE_TITLE, "");
+        values.put(Notes.COLUMN_NOTE_TEXT, "");
 
-        values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
-        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
-        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
+        Log.d(TAG, "Call to execute - thread : " + Thread.currentThread().getId());
 
-        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        task.execute(values);
 
-        mNoteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
+    }
 
-
-
-
-
-
+    private void displaySnackbar(String message) {
+        View view = findViewById(R.id.spinner_courses);
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -35,6 +35,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.pluralsightnoteskeeper.MainActivity" />
         </activity>
+
+        <provider
+            android:name=".NoteKeeperProvider"
+            android:authorities="com.example.android.pluralsightnoteskeeper.provider"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>
