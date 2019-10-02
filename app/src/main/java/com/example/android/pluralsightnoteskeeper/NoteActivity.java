@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -323,24 +324,51 @@ public class NoteActivity extends AppCompatActivity
 
     private void createNewNote() {
 
-        AsyncTask<ContentValues, Void, Uri> task =
-                new AsyncTask<ContentValues, Void, Uri>() {
-            @Override
+        AsyncTask<ContentValues, Integer, Uri> task =
+                new AsyncTask<ContentValues, Integer, Uri>() {
+
+            private ProgressBar mProgressBar;
+
+                    @Override
+                    protected void onPreExecute() {
+                        mProgressBar =findViewById(R.id.progress_bar);
+                        mProgressBar.setVisibility(View.VISIBLE);
+
+                        mProgressBar.setProgress(1);
+                    }
+
+                    @Override
             protected Uri doInBackground(ContentValues... params) {
                 ContentValues insertValues = params[0];
                 Uri rowUri = getContentResolver()
                         .insert(Notes.CONTENT_URI, insertValues);
 
-                return rowUri;
+                        simulateLongRunningWork();
+                        publishProgress(2);
+
+                        simulateLongRunningWork();
+                        publishProgress(3);
+
+                        return rowUri;
             }
 
             @Override
+            protected void onProgressUpdate(Integer... values) {
+                        int progressValue = values[0];
+                mProgressBar.setProgress(progressValue);
+
+
+                super.onProgressUpdate(values);
+            }
+
+                    @Override
             protected void onPostExecute(Uri uri) {
                 Log.d(TAG, "onPostExecute - thread: " + Thread.currentThread().getId());
 
                 mNoteUri = uri;
 
                 displaySnackbar(mNoteUri.toString());
+                mProgressBar.setVisibility(View.GONE);
             }
         };
 
@@ -358,6 +386,12 @@ public class NoteActivity extends AppCompatActivity
     private void displaySnackbar(String message) {
         View view = findViewById(R.id.spinner_courses);
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void simulateLongRunningWork() {
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ex) {}
     }
 
     @Override
