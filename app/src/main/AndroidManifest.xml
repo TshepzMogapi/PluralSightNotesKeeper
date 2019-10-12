@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".NoteBackupService"
+            android:exported="false"></service>
+        <service
+            android:name=".NOteBackupService"
+            android:exported="false" />
+
         <activity
             android:name=".NoteActivity"
             android:label="@string/title_activity_note"
@@ -16,7 +23,7 @@
         <activity
             android:name=".NoteListActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -40,8 +47,13 @@
             android:name=".NoteKeeperProvider"
             android:authorities="com.example.android.pluralsightnoteskeeper.provider"
             android:enabled="true"
-            android:exported="true">
-        </provider>
+            android:exported="true" />
+
+        <service
+            android:name=".NoteBackupService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>
